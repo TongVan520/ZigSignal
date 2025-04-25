@@ -8,18 +8,24 @@ pub fn main() !void {
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
-    var said = signal.Signal([]const u8).init(allocator);
+    var said = signal.SignalOne([]const u8).init(allocator);
     defer said.deinit();
 
-    try said.slots.append(&comptime struct {
-        fn f(message: []const u8) !void {
-            say(message);
-        }
-    }.f);
+    try said.slots.append(signal.SlotOne([]const u8){
+        .function = struct {
+            fn f(_: ?*anyopaque, message: []const u8) !void {
+                say(message);
+            }
+        }.f,
+    });
 
-    try said.emit("Hello World!\n");
+    try said.emit("Hello Signal Slot!\n");
 }
 
 pub fn say(message: []const u8) void {
     std.debug.print("{s}", .{message});
+}
+
+test "signal" {
+    _ = @import("signal.zig");
 }
