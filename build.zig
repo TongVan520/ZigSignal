@@ -26,6 +26,13 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    // 以 *Zig 模块* 的形式对外暴露库
+    _ = b.addModule("zig-signal", .{
+        .root_source_file = b.path("src/signal.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
     // This creates another `std.Build.Step.Compile`, but this one builds an executable
     // rather than a static library.
     const exe = b.addExecutable(.{
