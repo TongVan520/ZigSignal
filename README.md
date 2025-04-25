@@ -5,7 +5,33 @@
 - `Zig 0.14.0` 及以上
 
 ## 使用方式
+在你的项目的 `build.zig.zon` 文件的 `dependencies` 字段中添加内容：
+```zig
+.dependencies = .{
+	// 其它...
+	
+	.ZigSignal = .{
+		.url = "https://github.com/TongVan520/ZigSignal/archive/refs/heads/main.zip",
+		// .hash = "注释本行，然后通过zig build获取即可",
+		.lazy = false,
+	},
+	
+	// 其它...
+},
+```
 
+然后在 `bulid.zig` 中添加内容：
+```zig
+// 其它...
+const your_mod = ...;
+
+const zig_signal = b.dependency("ZigSignal", .{});
+your_mod.addImport("signal", zig_signal.module("zig-signal"));
+
+// 其它...
+```
+
+最后 `zig build` 即可。
 
 ## 使用示例
 此示例展示了 *信号槽* 最基本的用法。
